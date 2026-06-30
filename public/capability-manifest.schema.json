@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cvp.example/schemas/capability-manifest-0.1.json",
+  "title": "CVP Capability Manifest",
+  "type": "object",
+  "required": ["protocol", "platform", "capabilities"],
+  "properties": {
+    "protocol": { "const": "cvp/0.1" },
+    "platform": { "type": "string" },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "upload": { "type": "boolean" },
+        "resumable_upload": { "type": "boolean" },
+        "metadata_sync": { "type": "boolean" },
+        "captions": { "type": "boolean" },
+        "chapters": { "type": "boolean" },
+        "scheduling": { "type": "boolean" },
+        "analytics": { "type": "boolean" },
+        "monetization": { "type": "boolean" },
+        "geo_rights": { "type": "boolean" },
+        "delete": { "type": "boolean" }
+      },
+      "additionalProperties": { "type": ["boolean", "string", "number"] }
+    }
+  },
+  "additionalProperties": false
+}

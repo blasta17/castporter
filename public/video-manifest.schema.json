@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cvp.example/schemas/video-manifest-0.1.json",
+  "title": "CVP Video Manifest",
+  "type": "object",
+  "required": ["protocol", "id", "created_at", "creator", "asset", "metadata", "rights", "distribution", "integrity"],
+  "properties": {
+    "protocol": { "const": "cvp/0.1" },
+    "id": { "type": "string", "pattern": "^cvp:video:[0-9a-fA-F-]+$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "creator": {
+      "type": "object",
+      "required": ["id", "display_name"],
+      "properties": {
+        "id": { "type": "string" },
+        "display_name": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "asset": {
+      "type": "object",
+      "required": ["sha256", "filename", "mime_type", "size_bytes"],
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "filename": { "type": "string" },
+        "mime_type": { "type": "string" },
+        "size_bytes": { "type": "string", "pattern": "^[0-9]+$" },
+        "duration_seconds": { "type": ["number", "null"] },
+        "width": { "type": ["integer", "null"] },
+        "height": { "type": ["integer", "null"] },
+        "video_codec": { "type": ["string", "null"] },
+        "audio_codec": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["title", "description", "language", "tags", "chapters"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "description": { "type": "string" },
+        "language": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "chapters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["start", "title"],
+            "properties": { "start": { "type": "number", "minimum": 0 }, "title": { "type": "string" } },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "rights": {
+      "type": "object",
+      "required": ["owner", "license", "territories"],
+      "properties": {
+        "owner": { "type": "string" },
+        "license": { "type": "string" },
+        "territories": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "distribution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["platform", "status", "external_id", "external_url"],
+        "properties": {
+          "platform": { "type": "string" },
+          "status": { "type": "string" },
+          "external_id": { "type": ["string", "null"] },
+          "external_url": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["algorithm", "digest"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

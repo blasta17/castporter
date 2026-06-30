@@ -1,0 +1,31 @@
+services:
+  cvp-studio:
+    build: .
+    container_name: cvp-studio
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3080:3000"
+    volumes:
+      - cvp-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://127.0.0.1:3000/api/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  cvp-worker:
+    build: .
+    container_name: cvp-worker
+    restart: unless-stopped
+    env_file: .env
+    command: ["node", "--import", "tsx", "src/worker.ts"]
+    volumes:
+      - cvp-data:/data
+    depends_on:
+      cvp-studio:
+        condition: service_healthy
+
+volumes:
+  cvp-data:
